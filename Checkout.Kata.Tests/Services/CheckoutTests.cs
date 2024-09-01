@@ -8,6 +8,7 @@ namespace TestProject1.Services;
     public class CheckoutTests
     {
         private  Checkout _checkout;
+        private IDictionary<string, IPricingRule> _rules;
 
         
         public CheckoutTests()
@@ -18,7 +19,15 @@ namespace TestProject1.Services;
         [SetUp]
         public void Setup()
         {
-            _checkout = new Checkout();
+            _rules = new Dictionary<string, IPricingRule>()
+            {
+                {"A", new UnitPricingRule(50)},
+                {"B", new UnitPricingRule(30)},
+                {"C", new UnitPricingRule(20)}
+
+
+            };
+            _checkout = new Checkout(_rules);
         }
         
         [Test]
@@ -65,6 +74,37 @@ namespace TestProject1.Services;
             Assert.That(itemB, Is.EqualTo(3));
         }
         
+        [Test]
+        public void ShouldReturnTotalPriceAsZeroWhenNoItemsScanned()
+        {
+            var totalprice = _checkout.GetTotalPrice();
+            
+            Assert.That(totalprice, Is.EqualTo(0));
 
+        }
+
+        [Test]
+        public void ShouldReturnCorrectTotalPriceWhenItemsScanned()
+        {
+            _checkout.Scan("A");
+            _checkout.Scan("B");
+
+            var totalprice = _checkout.GetTotalPrice();
+            
+            Assert.That(totalprice, Is.EqualTo(80));
+
+        }
+        
+        [Test]
+        public void ShouldReturnTotalPriceWhenMultipleItemsWithUnitPricing()
+        {
+            _checkout.Scan("A");
+            _checkout.Scan("B");
+            _checkout.Scan("C");
+            
+            var totalprice = _checkout.GetTotalPrice();
+            
+            Assert.That(totalprice, Is.EqualTo(100));
+        }
     }
 
