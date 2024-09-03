@@ -21,7 +21,7 @@ public class Checkout: ICheckout
         }
         else
         {
-            _items.Add(item,1);
+            _items.Add(item, 1);
         }
     }
 
@@ -30,14 +30,11 @@ public class Checkout: ICheckout
         int totalPrice = 0;
         foreach (var item in _items)
         {
-            if (_rules.TryGetValue(item.Key, out var pricingRule))
+            if(_rules.TryGetValue(item.Key, out var pricingRule))
             {
                 totalPrice += pricingRule.CalculatePrice(item.Value);
             }
-
-            
         }
         return totalPrice;
     }
-    
 }

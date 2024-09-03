@@ -9,21 +9,16 @@ namespace TestProject1.Services;
     {
         private  Checkout _checkout;
         private IDictionary<string, IPricingRule> _rules;
-
-        
-        public CheckoutTests()
-        {
-            Setup();
-        }
         
         [SetUp]
         public void Setup()
         {
             _rules = new Dictionary<string, IPricingRule>()
             {
-                {"A", new UnitPricingRule(50)},
-                {"B", new UnitPricingRule(30)},
-                {"C", new UnitPricingRule(20)}
+                {"A", new SpecialPricingRule(3, 130, 50)},
+                {"B", new SpecialPricingRule(2, 45, 30)},
+                {"C", new UnitPricingRule(20)},
+                {"D", new UnitPricingRule(15)}
 
 
             };
@@ -105,6 +100,63 @@ namespace TestProject1.Services;
             var totalprice = _checkout.GetTotalPrice();
             
             Assert.That(totalprice, Is.EqualTo(100));
+        }
+        
+        
+        [Test]
+        public void ShouldHandleSpecialPricing()
+        {
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            
+            var totalprice = _checkout.GetTotalPrice();
+            
+            Assert.That(totalprice, Is.EqualTo(130));
+        }
+        
+        [Test]
+        public void ShouldHandleSpecialPricingWithUnitPricing()
+        {
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            
+            var totalprice = _checkout.GetTotalPrice();
+            
+            Assert.That(totalprice, Is.EqualTo(180));
+        }
+        
+        [Test]
+        public void ShouldHandleSpecialPricingForMultipleItems()
+        {
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            _checkout.Scan("B");
+            _checkout.Scan("B");
+            
+            var totalprice = _checkout.GetTotalPrice();
+            
+            Assert.That(totalprice, Is.EqualTo(175));
+        }
+        
+        [Test]
+        public void ShouldHandleSpecialPricingAndUnitPricingForMultipleItems()
+        {
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            _checkout.Scan("A");
+            _checkout.Scan("B");
+            _checkout.Scan("B");
+            _checkout.Scan("B");
+             _checkout.Scan("D");
+            
+            var totalprice = _checkout.GetTotalPrice();
+            
+            Assert.That(totalprice, Is.EqualTo(270));
         }
     }
 
