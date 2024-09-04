@@ -1,7 +1,7 @@
 using Checkout.Kata.Services;
 using Checkout.Kata.Services.Interfaces;
 
-namespace TestProject1.Services;
+namespace Checkout.Kata.Tests.Services;
 
 public class SpecialPricingRuleTests
 {

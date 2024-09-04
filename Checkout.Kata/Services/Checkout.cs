@@ -30,11 +30,30 @@ public class Checkout: ICheckout
         int totalPrice = 0;
         foreach (var item in _items)
         {
-            if(_rules.TryGetValue(item.Key, out var pricingRule))
+            try
             {
+                var pricingRule = FindItem(item.Key);
                 totalPrice += pricingRule.CalculatePrice(item.Value);
             }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Please remove the last scanned item.\n");
+                Console.WriteLine(ex.Message);
+            }
         }
+        Console.WriteLine($"The total price is: {totalPrice}");
         return totalPrice;
+    }
+
+
+    private IPricingRule FindItem(string itemName)
+    {
+        if (_rules.TryGetValue(itemName, out var pricingRule))
+        {
+            return pricingRule;
+        }
+
+        throw new Exception($"{itemName} does not exist");
     }
 }
