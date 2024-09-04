@@ -1,3 +1,4 @@
+using Checkout.Kata.Errors;
 using Checkout.Kata.Services.Interfaces;
 
 namespace Checkout.Kata.Services;
@@ -7,7 +8,7 @@ public class Checkout: ICheckout
     public IDictionary<string, int> _items;
     private IDictionary<string, IPricingRule> _rules;
 
-    public Checkout(IDictionary<string,IPricingRule> rules)
+    public Checkout(IDictionary<string, IPricingRule> rules)
     {
         _items = new Dictionary<string, int>();
         _rules = rules;
@@ -47,13 +48,13 @@ public class Checkout: ICheckout
     }
 
 
-    private IPricingRule FindItem(string itemName)
+    private IPricingRule FindItem(string sKU)
     {
-        if (_rules.TryGetValue(itemName, out var pricingRule))
+        if (_rules.TryGetValue(sKU, out var pricingRule))
         {
             return pricingRule;
         }
 
-        throw new Exception($"{itemName} does not exist");
+        throw new ItemNotFoundException(sKU);
     }
 }

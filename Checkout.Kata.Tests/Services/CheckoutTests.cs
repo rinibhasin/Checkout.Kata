@@ -224,14 +224,13 @@ public class CheckoutTests
                 var result = sw.ToString();
 
                 Assert.That(result, Does.Contain("Please remove the last scanned item."));
-                Assert.That(result, Does.Contain("Invalid item does not exist"));
+                Assert.That(result, Does.Contain("The item 'Invalid item' does not exist."));
             }
             finally
             {
                 Console.SetOut(originalOut);
             }
         }
-        
     }
 }
 
